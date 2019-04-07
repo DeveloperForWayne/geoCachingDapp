@@ -23,8 +23,7 @@ contract Item {
       address public itemOwner;
       bool public inCache;
       bytes32  public coordinates;
-      bytes32 public cacheCoordinates;
-
+     
       // constructor(StateStorage stateStorage) public {
       //       _stateStorage = stateStorage;
       // }
@@ -58,9 +57,5 @@ contract Item {
             return true;
       }
 
-      function setCacheCoordinates(bytes32 _cacheCoordinates) public returns(bool){
-            cacheCoordinates = _cacheCoordinates;
-            return true;
-      }    
-      
+    
 }

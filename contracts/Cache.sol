@@ -5,10 +5,26 @@ contract Cache {
       string name;
       address[] items;
 
-      constructor(bytes32 _coordinates, string memory _name) public {
-            coordinates = _coordinates;
-            name = _name;
+      mapping(address => uint) indexOfItem;
+
+      // constructor(bytes32 _coordinates, string memory _name) public {
+      //       coordinates = _coordinates;
+      //       name = _name;
+      // }
+
+      function addItem(address _item) public returns(bool) {
+            items.push(_item);
+            return true;
       }
+
+      function removeItem(address _item) public returns(bool){
+            uint index = indexOfItem[_item];
+            if (items.length > 1) {
+                  items[index] = items[items.length-1];
+            }
+            items.length--; // Implicitly recovers gas from last element storag 
+            return true;
+      } 
 
 
 }
