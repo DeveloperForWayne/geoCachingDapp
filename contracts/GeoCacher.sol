@@ -1,21 +1,12 @@
 pragma solidity >0.4.99 <0.6.0;
 
-// interface StateStorage { 
-
-//     function getAddress(bytes32 key) external returns (address);
-//     function getAddressArray(bytes32 key) external returns (address[] memory);
-//     function getUint(bytes32 key) external returns (uint);
-//     function getBool(bytes32 key) external returns (bool);
-//     function getBytes32(bytes32 key) external returns (bytes32);
-//     function getString(bytes32 key) external returns (string memory);
-//     function setAddressArray(bytes32 key, address[] calldata value) external;
-//     function updateAddressArray(bytes32 key, address  value) external;
-//     function setAddress(bytes32 key, address value) external;
-//     function setUint(bytes32 key, uint value) external;
-//     function setBool(bytes32 key, bool value) external;
-//     function setBytes32(bytes32 key, bytes32 value) external;
-//     function setString(bytes32 key, string calldata value) external;
-// }
+contract Cache {
+    function coordinates() public pure returns(bytes32 );
+    function name() public pure returns(string memory);
+    function items() public pure returns(address[] memory);
+    function addItem(address) public returns(bool);
+    function removeItem(address) public returns(bool);
+}
 
 contract Item {
 
@@ -25,7 +16,7 @@ contract Item {
     function coordinates() public pure returns (bytes32);
     function cacheCoordinates() public pure returns(bytes32);
     function putItemInCache() public;
-    function removeItemFromChache() public;
+    function removeItemFromCache() public;
     function showItemSpecs() public returns(address, string memory, bool, bytes32);
     function setItemOwner(address) public returns(bool);
     function setCoordinates(bytes32) public returns(bool);
@@ -36,6 +27,7 @@ contract GeoCacher  {
 
     address public owner;
     address[] bag;
+    mapping(address => uint) indexOfItem;
 
     constructor() public {
         owner = msg.sender;
@@ -61,9 +53,10 @@ contract GeoCacher  {
         address[] memory someBag;
     }
     
-    function claimOwnershipOfItem(Item _item) public onlyOwner returns(bool){
+    function claimOwnershipOfItem(Item _item, Cache _cache) public onlyOwner returns(bool){
        _item.setItemOwner(owner);
         bag.push(address(_item));
+        _cache.removeItem(address(_cache));
     }
 
     function listChacherItems() public view  onlyOwner  returns ( address[] memory ){
@@ -84,13 +77,30 @@ contract GeoCacher  {
         _item.showItemSpecs;
     }
 
-    function placeItemInCache(Item _item) public onlyOwner returns(bool) {
+    function placeItemInCache(Item _item, Cache _cache) public onlyOwner returns(bool) {
         _item.putItemInCache();
-        return true;
-    }
+        _cache.addItem(address(_item));
+        uint index = indexOfItem[address(_item)];
+            if (bag.length > 1) {
+                  bag[index] = bag[bag.length-1];
+            }
+            bag.length--; // Implicitly recovers gas from last element storag 
+            return true;
+      } 
+        
+            
+      
+    
+    
 
-    function eliminateItemFromCache(Item _item) public onlyOwner returns (bool) {
-        _item.removeItemFromChache();
+    function eliminateItemFromCache(Item _item, Cache _cache) public onlyOwner returns (bool) {
+        _item.removeItemFromCache();
+        _cache.removeItem(address(_item));
+        uint index = indexOfItem[address(_item)];
+            if (bag.length > 1) {
+                  bag[index] = bag[bag.length-1];
+            }
+            bag.length--; // Implicitly recovers gas from last element storag 
         return true;
     }
 

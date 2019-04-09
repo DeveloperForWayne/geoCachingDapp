@@ -33,7 +33,7 @@ contract Item {
             inCache = true;
       }
 
-      function removeItemFromChache() public {     
+      function removeItemFromCache() public {     
             require(inCache == true);
             inCache = false;
       }
