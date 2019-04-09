@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import GoogleMapReact from 'google-map-react';
 // CSS
 import "./ItemForm.css";
 import ItemTile from "./ItemTile";
@@ -21,27 +22,33 @@ class ItemForm extends Component {
   handleSubmit(event) {
     console.log('Item Info Changed' + this.state.name) ;
     event.preventDefault();
-    this.submitItem(this.state)
+    //this.submitItem(this.state)
+    this.setState({name: event.target.value,
+      coordinates: event.target.value,
+      inCache: event.target.value
+      //stuffs to be added regerding submission to blockchain
+     });
   }
 
 
-  handleChange(event) {this.setState({name: event.target.value,
-                       coordinates: event.target.value,
+  // handleChange(event) {this.setState({name: event.target.value,
+  //                      coordinates: event.target.value,
+  //                      inCache: event.target.value
 
-                      });
-  }
+  //                     });
+  // }
   render () {
     return (
       <ItemTile>
         <form>
           <div className="form-group">
             <h4> Item address {this.state.address}</h4>
-            <input disabled={this.state.letUpdate === true ? false : true} type="hidden" name="name" value={this.state.name} onChange={this.handleChange}Name/>
-            <input disabled={this.state.letUpdate === true ? false : true} type="hidden" name="coordinates" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
-            <input disabled={this.state.letUpdate === true ? false : true} type="checkbox" name="name" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
+            <input  type="hidden" name="name" value={this.state.name} onChange={this.handleChange}Name/>
+            <input  type="hidden" name="coordinates" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
+            <input  type="checkbox" name="name" value={this.state.inCache} onChange={this.handleChange} inCache/>
 
             <input type="submit" className="btn-sm" value="Show on the Map"  />
-            <input disabled={this.state.letUpdate === true ? false : true} type="submit" className="btn-sm" value="Submit" onClick={this.handleSubmit} />
+            <input  type="submit" className="btn-sm" value="Submit" onClick={this.handleSubmit} />
           </div>
         </form>
       </ItemTile>

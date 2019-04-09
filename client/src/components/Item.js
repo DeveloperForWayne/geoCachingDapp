@@ -36,12 +36,12 @@ class Item extends Component {
         <form>
           <div className="form-group">
             <h4> Item address {this.state.address}</h4>
-            <input disabled={this.state.letUpdate === true ? false : true} type="hidden" name="name" value={this.state.name} onChange={this.handleChange}Name/>
-            <input disabled={this.state.letUpdate === true ? false : true} type="hidden" name="coordinates" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
-            <input disabled={this.state.letUpdate === true ? false : true} type="checkbox" name="name" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
+            <input  type="hidden" name="name" value={this.state.name} onChange={this.handleChange}Name/>
+            <input  type="hidden" name="coordinates" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
+            <input  type="checkbox" name="name" value={this.state.coordinates} onChange={this.handleChange} coordinates/>
 
             <input type="submit" className="btn-sm" value="Show on the Map"  />
-            <input disabled={this.state.letUpdate === true ? false : true} type="submit" className="btn-sm" value="Submit" onClick={this.handleSubmit} />
+            <input  type="submit" className="btn-sm" value="Submit" onClick={this.handleSubmit} />
           </div>
         </form>
       </ItemTile>

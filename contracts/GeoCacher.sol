@@ -6,6 +6,7 @@ contract Cache {
     function items() public pure returns(address[] memory);
     function addItem(address) public returns(bool);
     function removeItem(address) public returns(bool);
+    function listItems() public returns(address);
 }
 
 contract Item {
@@ -84,7 +85,7 @@ contract GeoCacher  {
             if (bag.length > 1) {
                   bag[index] = bag[bag.length-1];
             }
-            bag.length--; // Implicitly recovers gas from last element storag 
+            bag.length--;
             return true;
       } 
         
@@ -100,7 +101,7 @@ contract GeoCacher  {
             if (bag.length > 1) {
                   bag[index] = bag[bag.length-1];
             }
-            bag.length--; // Implicitly recovers gas from last element storag 
+            bag.length--;
         return true;
     }
 

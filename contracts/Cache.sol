@@ -22,9 +22,15 @@ contract Cache {
             if (items.length > 1) {
                   items[index] = items[items.length-1];
             }
-            items.length--; // Implicitly recovers gas from last element storag 
+            items.length--;
             return true;
       } 
+
+      function listItems() public returns(address) {
+            for (uint j = 0; j<items.length; j++) {
+            return items[j];
+        }
+      }
 
 
 }
