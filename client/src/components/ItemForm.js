@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 // CSS
 import "./ItemForm.css";
 import ItemTile from "./ItemTile";
-class Item extends Component {
+class ItemForm extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -48,4 +48,4 @@ class Item extends Component {
     )
   }
 }
-export default Item;
+export default ItemForm;

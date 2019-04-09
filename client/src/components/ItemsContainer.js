@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import Item from "./Item";
-import ItemOwned from "../components/ItemOwned";
-// import FakeDb from "../fakedb";
+import ItemForm from "../components/ItemForm";
 
 import "./ItemContianer.css"
 
-export default class ItemsOwnedContainer extends Component {
+export default class ItemFormContainer extends Component {
 	renderItems() {
 		return this.props.Item.map(Item => {
 			return <Item
@@ -20,7 +19,7 @@ export default class ItemsOwnedContainer extends Component {
 	render() {
 		return (
 			<div className="Item-container">
-				<ItemOwned />
+				<ItemForm />
 				{this.renderItems()}
 			</div>
 		)

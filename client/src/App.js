@@ -3,7 +3,7 @@ import './App.css';
 import NavBarComponent from"../src/components/NavBarComponent.js"
 import Footer from "../src/components/Footer.js"
 import UserAddress from "../src/components/UserAddress.js"
-import ItemsOwnedContainer from './components/ItemsOwnedContainer';
+import ItemFormContainer from './components/ItemFormContainer';
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
       <div className="App">
       <NavBarComponent/>
       <UserAddress/>
-      <ItemsOwnedContainer/>
+      <ItemFormContainer/>
       <Footer/>
       </div>
     );
