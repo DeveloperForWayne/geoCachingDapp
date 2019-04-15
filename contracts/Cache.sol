@@ -16,7 +16,7 @@ contract Cache {
             caches[_coordinates].items.push(_item);
       }
 
-      function removeItem(string memory _coordinates, address _item) public returns(address[] memory) {
+      function removeItem(string memory _coordinates, address _item) public {
             address[] storage itemArr = caches[_coordinates].items;
             for (uint i = 0; i < itemArr.length - 1; i++) {
                   if (itemArr[i] == _item) {
@@ -25,7 +25,6 @@ contract Cache {
                         itemArr.length--;
                   }
             }
-            return itemArr;
       } 
 
       function getCacheName(string memory _coordinates) public  view returns(string memory) {
