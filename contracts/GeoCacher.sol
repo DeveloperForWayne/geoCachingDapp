@@ -24,14 +24,4 @@ contract GeoCacher  {
         return bag;
     }
     
-    function removeBagItem(address item) public {
-        for (uint i = 0; i < bag.length - 1; i++) {
-            if (bag[i] == item) {
-                bag[i] = bag[bag.length-1];
-                delete bag[i - 1];
-                bag.length--;
-            }
-        }
-    } 
-
 }
