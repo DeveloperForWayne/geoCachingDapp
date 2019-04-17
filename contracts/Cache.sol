@@ -4,6 +4,7 @@ contract Cache {
       struct cache {
             string name;
             address[] items;
+            mapping(address => uint) itemPointers;
       }
 
       mapping (string => cache) caches;
@@ -16,16 +17,18 @@ contract Cache {
             caches[_coordinates].items.push(_item);
       }
 
+      function isCacheItem(string memory _coordinates, address _item) public view returns(bool) {
+            if(caches[_coordinates].items.length == 0) return false;
+            return caches[_coordinates].items[caches[_coordinates].itemPointers[_item]] == _item;
+      }
+
       function removeItem(string memory _coordinates, address _item) public {
-            address[] storage itemArr = caches[_coordinates].items;
-            for (uint i = 0; i < itemArr.length - 1; i++) {
-                  if (itemArr[i] == _item) {
-                        itemArr[i] = itemArr[itemArr.length-1];
-                        delete itemArr[i - 1];
-                        itemArr.length--;
-                  }
-            }
-      } 
+            cache storage c = caches[_coordinates];
+            require(isCacheItem(_coordinates, _item));
+            uint rowToDelete = c.itemPointers[_item];
+            c.items[rowToDelete] = c.items[c.items.length-1];
+            c.items.length--;
+      }
 
       function getCacheName(string memory _coordinates) public  view returns(string memory) {
            return caches[_coordinates].name;
