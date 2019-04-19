@@ -3,7 +3,7 @@ import {ethers} from "ethers";
 
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
 //const provider = ethers.getDefaultProvider('kovan');
-const cacheJson = require("../json/Cache.json")
+const cacheJson = require("../json/Cache.json");
 const cacheAbi = cacheJson.abi;
 const cacheBytecode = cacheJson.bytecode;
 
@@ -19,20 +19,18 @@ class Cache extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "Wayne's Junkyard",
-            coordinates: "2345w 3456N",
-            cacheCoordinates: "2345w 3456N",
-            address: "",
-            itemAddress: "",
-            items: []
+            cacheName: this.props.cacheName,
+            cacheCoordinates: this.props.cacheCoordinates,
+            cacheAddress: this.props.cacheAddress,
+            itemAddress: this.props.itemAddress,
+            itemsInCache: this.props.itemsInCache
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddItem = this.handleAddItem.bind(this);
-        this.handleDeleteItem = this.handleDeleteItem.bind(this);
+        this.setItems = this.setItems.bind(this);
 
         this.handleNMChange = this.handleNMChange.bind(this);
         this.handleCDChange = this.handleCDChange.bind(this);
-        this.handleECCChange = this.handleECCChange.bind(this);
         this.handleItemChange = this.handleItemChange.bind(this);
     }
 
@@ -40,9 +38,9 @@ class Cache extends Component {
         event.preventDefault();
         
         let factory = new ethers.ContractFactory(cacheAbi, cacheBytecode, wallet);
-        let contract = await factory.deploy(this.state.coordinates, this.state.name);
+        let contract = await factory.deploy(this.state.cacheCoordinates, this.state.cacheName);
         
-        this.setState({address: contract.address});
+        this.setState({cacheAddress: contract.address});
 
         await contract.deployed();
         
@@ -52,13 +50,13 @@ class Cache extends Component {
         event.preventDefault();
         
         // add item address to cache
-        let contractAdditem = new ethers.Contract(this.state.address, cacheAbi, provider);
+        let contractAdditem = new ethers.Contract(this.state.cacheAddress, cacheAbi, provider);
         let contractWithSigner = contractAdditem.connect(wallet);
         let tx = await contractWithSigner.addItem(this.state.cacheCoordinates, this.state.itemAddress);
         await tx.wait();
 
         let itemsAdded = await contractWithSigner.getCacheItems(this.state.cacheCoordinates);
-        this.setState({items: itemsAdded});
+        this.setState({itemsInCache: itemsAdded});
 
         // change item status
         let contractChangeStatus = new ethers.Contract(this.state.itemAddress, itemAbi, provider);
@@ -68,35 +66,15 @@ class Cache extends Component {
         
     }
 
-    async handleDeleteItem(event) {
-        event.preventDefault();
-        
-        // remove item from cache
-        let contractDelitem = new ethers.Contract(this.state.address, cacheAbi, provider);
-        let contractSignerDel = contractDelitem.connect(wallet);
-        let txDel = await contractSignerDel.removeItem(this.state.cacheCoordinates, this.state.itemAddress);
-        await txDel.wait();
-
-        let itemsDeleted = await contractSignerDel.getCacheItems(this.state.cacheCoordinates);
-        this.setState({items: itemsDeleted});
-
-        // change item status
-        let contractChangeStatusDel = new ethers.Contract(this.state.itemAddress, itemAbi, provider);
-        let contractSignerSt = contractChangeStatusDel.connect(wallet);
-        let txChangeItem = await contractSignerSt.removeItemFromChache();
-        await txChangeItem.wait();
-        
+    setItems(items){
+        this.setState({itemsInCache: items});
     }
 
     handleNMChange(event) {
-        this.setState({name: event.target.value});
+        this.setState({cacheName: event.target.value});
     }
 
     handleCDChange(event) {
-        this.setState({coordinates: event.target.value});
-    }
-
-    handleECCChange(event) {
         this.setState({cacheCoordinates: event.target.value});
     }
 
@@ -112,13 +90,13 @@ class Cache extends Component {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">New Cache Name:</label>
                         <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.name} onChange={this.handleNMChange} />
+                            <input className="form-control" type="text" value={this.state.cacheName} onChange={this.handleNMChange} />
                         </div>
                     </div>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">New Cache Coordinates:</label>
                         <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.coordinates} onChange={this.handleCDChange} />
+                            <input className="form-control" type="text" value={this.state.cacheCoordinates} onChange={this.handleCDChange} />
                         </div>
                     </div>
                     <div className="form-group row">
@@ -127,15 +105,9 @@ class Cache extends Component {
                         </div>
                     </div>
                 </form>
-                <h3>Cache Address: {this.state.address}</h3>
+                <h3>Cache Address: {this.state.cacheAddress}</h3>
                 <hr />
                 <form onSubmit={this.handleAddItem}>
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Existing Cache Coordinates:</label>
-                        <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.cacheCoordinates} onChange={this.handleECCChange} />
-                        </div>
-                    </div>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Item address:</label>
                         <div className="col-sm-10">
@@ -148,16 +120,9 @@ class Cache extends Component {
                         </div>
                     </div>
                 </form>
-                <form onSubmit={this.handleDeleteItem}>
-                    <div className="form-group row">
-                        <div className="col-sm-10">
-                        <button type="submit" className="btn btn-primary">Delete Item</button>
-                        </div>
-                    </div>
-                </form>
                 <h3>All Items in Cache</h3>
                 <ul>
-                    {this.state.items.map(item => (
+                    {this.state.itemsInCache.map(item => (
                         <li key={item}>{item}</li>
                     ))}
                 </ul>

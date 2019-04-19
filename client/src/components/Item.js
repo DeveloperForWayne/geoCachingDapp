@@ -3,7 +3,7 @@ import {ethers} from "ethers";
 
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
 //const provider = ethers.getDefaultProvider('kovan');
-const itemJson = require("../json/Item.json")
+const itemJson = require("../json/Item.json");
 const itemAbi = itemJson.abi;
 const itemBytecode = itemJson.bytecode;
 //const privateKey = process.env.PRIVATE_KEY;
@@ -15,8 +15,8 @@ class Item extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "logbooks",
-            address: ""
+            itemName: this.props.itemName,
+            itemAddress: this.props.itemAddress
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -27,16 +27,16 @@ class Item extends Component {
         
         let factory = new ethers.ContractFactory(itemAbi, itemBytecode, wallet);
 
-        let contract = await factory.deploy("", this.state.name, wallet.address, false);
+        let contract = await factory.deploy("", this.state.itemName, wallet.address, false);
         
-        this.setState({address: contract.address});
+        this.setState({itemAddress: contract.address});
 
         await contract.deployed();
         
     }
 
     handleChange(event) {
-        this.setState({name: event.target.value});
+        this.setState({itemName: event.target.value});
     }
 
     render() {
@@ -47,7 +47,7 @@ class Item extends Component {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Item Name:</label>
                         <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.name} onChange={this.handleChange} />
+                            <input className="form-control" type="text" value={this.state.itemName} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div className="form-group row">
@@ -56,7 +56,7 @@ class Item extends Component {
                         </div>
                     </div>
                 </form>
-                <h3>Item Address: {this.state.address}</h3>
+                <h3>Item Address: {this.state.itemAddress}</h3>
             </div>
         );
     };
