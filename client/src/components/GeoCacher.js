@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {ethers} from "ethers";
+import '../components/GeoCacher.css'
 
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
 //const provider = ethers.getDefaultProvider('kovan');
@@ -120,7 +121,7 @@ class GeoCacher extends Component {
                     Use it next time to retrieve your info.
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Name:</label>
-                        <div className="col-sm-10">
+                        <div className="col-sm-3">
                             <input className="form-control" type="text" value={this.state.geocacherName} onChange={this.handleNMChange} />
                         </div>
                     </div>
@@ -139,7 +140,7 @@ class GeoCacher extends Component {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Address:</label>
                         <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.geocacherAddress} onChange={this.handleAddressChange}/><br/>
+                            <input className="form-control" type="text"  onChange={this.handleAddressChange}/><br/>
                             <button type="submit" className="btn btn-primary">Submit</button>
                         </div>
                         &emsp;<h5>You have these items in your bag:</h5>

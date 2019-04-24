@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {ethers} from "ethers";
+import '../components/Item.css'
 
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
 //const provider = ethers.getDefaultProvider('kovan');
@@ -48,17 +49,18 @@ class Item extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Item Name:</label>
-                        <div className="col-sm-10">
+                        <div className="col-sm-3">
                             <input className="form-control" type="text" value={this.state.itemName} onChange={this.handleChange} />
                         </div>
                     </div>
                     <div className="form-group row">
                         <div className="col-sm-10">
-                        <button type="submit" className="btn btn-success">Create Item</button>
+                        <button type="submit" className="btn btn-primary">Create Item</button>
                         </div>
                     </div>
+                    <h6>This is the address of your new item: {this.state.itemAddress}</h6>
                 </form>
-                <h5>This is the address of your new item: {this.state.itemAddress}</h5>
+                
             </div>
         );
     };

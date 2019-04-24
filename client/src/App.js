@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+//import './App.css';
 import GeoCacher from"../src/components/GeoCacher.js"
 import Cache from "../src/components/Cache.js"
 import Footer from "../src/components/Footer.js"
