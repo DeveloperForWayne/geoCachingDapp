@@ -66,8 +66,8 @@ class GeoCacher extends Component {
         let tx = await contractWithSigner.claimOwnershipOfItem(this.state.itemAddress);
         await tx.wait();
 
-        let itemsOwneded = await contractWithSigner.getBagItems();
-        this.setState({itemsInBag: itemsOwneded});
+        let itemsOwned = await contractWithSigner.getBagItems();
+        this.setState({itemsInBag: itemsOwned});
 
         // change item owner
         let contractChangeStatus = new ethers.Contract(this.state.itemAddress, itemAbi, provider);
@@ -113,7 +113,8 @@ class GeoCacher extends Component {
     render() {
         return (
             <div className="container border">
-                <h2>Geocacher</h2>
+                {/* <h2>Geocacher</h2> */}
+                <br/>
                 <form onSubmit={this.handleSubmit}>
                     If you are a new geocacher, enter your name and an Ethereum address will be created for you.
                     Use it next time to retrieve your info.
@@ -129,7 +130,7 @@ class GeoCacher extends Component {
                         </div>
                     </div>
                 </form>
-                <h3>Geocacher Address: {this.state.geocacherAddress}</h3>
+                <h6>Geocacher Address: {this.state.geocacherAddress}</h6>
 
                 <hr/>
 
@@ -141,25 +142,33 @@ class GeoCacher extends Component {
                             <input className="form-control" type="text" value={this.state.geocacherAddress} onChange={this.handleAddressChange}/><br/>
                             <button type="submit" className="btn btn-primary">Submit</button>
                         </div>
+                        &emsp;<h5>You have these items in your bag:</h5>
+                        <ul>
+                            {this.state.itemsInBag.map(item => (
+                            <li key={item}>{item}</li>
+                            ))}
+                        </ul>
                     </div>
                 </form>
                 
                 <hr/>
 
                 <form onSubmit={this.handleClaimItem}>
-                <div className="form-group row">
+                    {/* <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Cache Address:</label>
                         <div className="col-sm-10">
                             <input className="form-control" type="text" value={this.state.cacheAddress} onChange={this.handleCADChange} />
                         </div>
-                    </div>
-                    <div className="form-group row">
+                    </div> */}
+                    {/* <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Cache Coordinates:</label>
                         <div className="col-sm-10">
                             <input className="form-control" type="text" value={this.state.cacheCoordinates} onChange={this.handleECCChange} />
                         </div>
-                    </div>
+                    </div> */}
+                    <h5>Claiming an Item's Ownership:</h5>
                     <div className="form-group row">
+                        
                         <label className="col-sm-2 col-form-label">Item address:</label>
                         <div className="col-sm-10">
                             <input className="form-control" type="text" value={this.state.itemAddress} onChange={this.handleItemChange} />
@@ -171,12 +180,7 @@ class GeoCacher extends Component {
                         </div>
                     </div>
                 </form>
-                <h3>All Items in Bag</h3>
-                <ul>
-                    {this.state.itemsInBag.map(item => (
-                        <li key={item}>{item}</li>
-                    ))}
-                </ul>
+               
             </div>
         );
     };

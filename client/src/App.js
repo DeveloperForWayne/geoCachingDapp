@@ -38,6 +38,7 @@ class App extends Component {
       <br/>
       <Header/>
       <br/>
+      <h1>Geocacher</h1>
       <GeoCacher             
             geocacherName={this.state.geocacherName}
             geocacherAddress={this.state.geocacherAddress}
@@ -48,9 +49,10 @@ class App extends Component {
             itemsInCache={this.state.itemsInCache}
             changeItemIncache={this.setItemInCache} />
       <br/>
-
+      <h1>Items</h1>
       <Item itemName={this.state.itemName} 
-            itemAddress={this.state.itemName}/><br />
+            itemAddress={this.state.itemAddress}/><br />
+      <h1>Caches</h1>
       <Cache             
             cacheName={this.state.cacheName}
             cacheCoordinates={this.state.cacheCoordinates}

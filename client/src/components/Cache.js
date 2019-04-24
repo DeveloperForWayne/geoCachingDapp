@@ -85,7 +85,7 @@ class Cache extends Component {
     render() {
         return (
             <div className="container border">
-                <h2>Cache</h2>
+                {/* <h1>Cache</h1> */}
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">New Cache Name:</label>
@@ -120,7 +120,7 @@ class Cache extends Component {
                         </div>
                     </div>
                 </form>
-                <h3>All Items in Cache</h3>
+                <h3>All Items in Cache:</h3>
                 <ul>
                     {this.state.itemsInCache.map(item => (
                         <li key={item}>{item}</li>

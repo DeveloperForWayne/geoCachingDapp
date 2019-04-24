@@ -42,7 +42,9 @@ class Item extends Component {
     render() {
         return (
             <div className="container border">
-                <h2>Item</h2>
+                {/* <h2>Item</h2> */}
+                <br/>
+                To Create An Item, Enter its name here:
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Item Name:</label>
@@ -56,7 +58,7 @@ class Item extends Component {
                         </div>
                     </div>
                 </form>
-                <h3>Item Address: {this.state.itemAddress}</h3>
+                <h5>This is the address of your new item: {this.state.itemAddress}</h5>
             </div>
         );
     };
