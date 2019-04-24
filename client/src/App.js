@@ -4,6 +4,7 @@ import GeoCacher from"../src/components/GeoCacher.js"
 import Cache from "../src/components/Cache.js"
 import Footer from "../src/components/Footer.js"
 import Item from '../src/components/Item.js';
+import Header from '../src/components/Header.js';
 
 require('dotenv').config();
 
@@ -34,19 +35,9 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-      <Cache             
-            cacheName={this.state.cacheName}
-            cacheCoordinates={this.state.cacheCoordinates}
-            cacheAddress={this.state.cacheAddress}
-            itemAddress={this.state.itemAddress}
-            itemsInCache={this.state.itemsInCache}
-            ref={changeItem => {
-              this.changeItem = changeItem;
-            }} /><br />
-
-      <Item itemName={this.state.itemName} 
-            itemAddress={this.state.itemName}/><br />
-
+      <br/>
+      <Header/>
+      <br/>
       <GeoCacher             
             geocacherName={this.state.geocacherName}
             geocacherAddress={this.state.geocacherAddress}
@@ -56,6 +47,20 @@ class App extends Component {
             itemsInBag={this.state.itemsInBag}
             itemsInCache={this.state.itemsInCache}
             changeItemIncache={this.setItemInCache} />
+      <br/>
+
+      <Item itemName={this.state.itemName} 
+            itemAddress={this.state.itemName}/><br />
+      <Cache             
+            cacheName={this.state.cacheName}
+            cacheCoordinates={this.state.cacheCoordinates}
+            cacheAddress={this.state.cacheAddress}
+            itemAddress={this.state.itemAddress}
+            itemsInCache={this.state.itemsInCache}
+            ref={changeItem => {
+              this.changeItem = changeItem;
+            }} /><br />
+      
       <Footer />
       </div>
     );

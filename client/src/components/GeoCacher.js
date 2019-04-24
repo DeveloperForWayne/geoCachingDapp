@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {ethers} from "ethers";
 
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
 //const provider = ethers.getDefaultProvider('kovan');
 const GeoCacherJson = require("../json/GeoCacher.json");
 const geoCacherAbi = GeoCacherJson.abi;
@@ -14,7 +14,7 @@ const itemJson = require("../json/Item.json")
 const itemAbi = itemJson.abi;
 
 //const privateKey = process.env.PRIVATE_KEY;
-const privateKey = "0x391e818eee3d1cba9c1fffc2078302041e0d1b4ce2fdc3ee60dd420fc7c2241e";
+const privateKey = "0xba5d2a82930afbd24b81bd225a88231be220015ae0b0f8ec8ed0baba7430be11";
 
 const wallet = new ethers.Wallet(privateKey, provider);
 
@@ -30,7 +30,9 @@ class GeoCacher extends Component {
             itemsInBag: this.props.itemsInBag,
             itemsInCache: this.props.itemsInCache
         };
+
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleAddressSubmit = this.handleAddressSubmit.bind(this);
         this.handleClaimItem = this.handleClaimItem.bind(this);
 
         this.handleNMChange = this.handleNMChange.bind(this);
@@ -41,14 +43,18 @@ class GeoCacher extends Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-        
         let factory = new ethers.ContractFactory(geoCacherAbi, geoCacherBytecode, wallet);
         let contract = await factory.deploy(this.state.geocacherName);
-        
         this.setState({geocacherAddress: contract.address});
+        await contract.deployed();   
+    }
 
-        await contract.deployed();
-        
+    async handleAddressSubmit(event) {
+        event.preventDefault();
+        let factory = new ethers.ContractFactory(geoCacherAbi, geoCacherBytecode, wallet);
+        let contract = await factory.deploy(this.state.geocacherAddress);
+        this.setState({geocacherAddress: contract.address});
+        await contract.deployed();   
     }
 
     async handleClaimItem(event) {
@@ -88,6 +94,10 @@ class GeoCacher extends Component {
         this.setState({geocacherName: event.target.value});
     }
 
+    handleAddressChange(event) {
+        this.setState({geocacherAddress: event.target.value});
+    }
+
     handleItemChange(event) {
         this.setState({itemAddress: event.target.value});
     }
@@ -103,22 +113,39 @@ class GeoCacher extends Component {
     render() {
         return (
             <div className="container border">
-                <h2>GeoCacher</h2>
+                <h2>Geocacher</h2>
                 <form onSubmit={this.handleSubmit}>
+                    If you are a new geocacher, enter your name and an Ethereum address will be created for you.
+                    Use it next time to retrieve your info.
                     <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">New GeoCacher Name:</label>
+                        <label className="col-sm-2 col-form-label">Name:</label>
                         <div className="col-sm-10">
                             <input className="form-control" type="text" value={this.state.geocacherName} onChange={this.handleNMChange} />
                         </div>
                     </div>
                     <div className="form-group row">
                         <div className="col-sm-10">
-                        <button type="submit" className="btn btn-primary">Create GeoCacher</button>
+                        <button type="submit" className="btn btn-primary">Create Geocacher Address</button>
                         </div>
                     </div>
                 </form>
-                <h3>GeoCacher Address: {this.state.geocacherAddress}</h3>
-                <hr />
+                <h3>Geocacher Address: {this.state.geocacherAddress}</h3>
+
+                <hr/>
+
+                If you already have an address, enter it here:
+                <form onSubmit={this.handleAddressSubmit}>
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Address:</label>
+                        <div className="col-sm-10">
+                            <input className="form-control" type="text" value={this.state.geocacherAddress} onChange={this.handleAddressChange}/><br/>
+                            <button type="submit" className="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                
+                <hr/>
+
                 <form onSubmit={this.handleClaimItem}>
                 <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Cache Address:</label>

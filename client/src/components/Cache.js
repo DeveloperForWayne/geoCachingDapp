@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {ethers} from "ethers";
 
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
 //const provider = ethers.getDefaultProvider('kovan');
 const cacheJson = require("../json/Cache.json");
 const cacheAbi = cacheJson.abi;
