@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {ethers} from "ethers";
+import Map from "../components/Map"
 
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
 //const provider = ethers.getDefaultProvider('kovan');
