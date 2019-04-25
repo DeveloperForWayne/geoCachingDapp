@@ -29,14 +29,16 @@ class GeoCacher extends Component {
             itemAddress: this.props.itemAddress,
             cacheCoordinates: this.props.cacheCoordinates,
             itemsInBag: this.props.itemsInBag,
-            itemsInCache: this.props.itemsInCache
+            itemsInCache: this.props.itemsInCache,
+            createdGeocacherAddress:"",
+            createdGeocacherName:""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddressSubmit = this.handleAddressSubmit.bind(this);
         this.handleClaimItem = this.handleClaimItem.bind(this);
-
         this.handleNMChange = this.handleNMChange.bind(this);
+        this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handleItemChange = this.handleItemChange.bind(this);
         this.handleECCChange = this.handleECCChange.bind(this);
         this.handleCADChange = this.handleCADChange.bind(this);
@@ -45,29 +47,34 @@ class GeoCacher extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         let factory = new ethers.ContractFactory(geoCacherAbi, geoCacherBytecode, wallet);
-        let contract = await factory.deploy(this.state.geocacherName);
-        this.setState({geocacherAddress: contract.address});
-        await contract.deployed();   
+        let contract = await factory.deploy(this.state.createdGeocacherName);
+        this.setState({createdGeocacherAddress: contract.address});
+        await contract.deployed();
     }
 
     async handleAddressSubmit(event) {
         event.preventDefault();
-        let factory = new ethers.ContractFactory(geoCacherAbi, geoCacherBytecode, wallet);
-        let contract = await factory.deploy(this.state.geocacherAddress);
-        this.setState({geocacherAddress: contract.address});
-        await contract.deployed();   
+        //let factory = new ethers.ContractFactory(geoCacherAbi, geoCacherBytecode, wallet);
+        let contractAddress = this.state.geocacherAddress;
+        //this.setState({geocacherAddress: contract.address});
+        //await contract.deployed();
+        let geocacherContract = new ethers.Contract(contractAddress, geoCacherAbi, provider);
+        let newGeocacherName = await geocacherContract.name();
+        this.setState({geocacherName: newGeocacherName});
     }
 
     async handleClaimItem(event) {
         event.preventDefault();
         
         // claim ownership of item
-        let contractClaimitem = new ethers.Contract(this.state.geocacherAddress, geoCacherAbi, provider);
-        let contractWithSigner = contractClaimitem.connect(wallet);
-        let tx = await contractWithSigner.claimOwnershipOfItem(this.state.itemAddress);
+        // let contractClaimitem = new ethers.Contract(this.state.geocacherAddress, geoCacherAbi, provider);
+        // let contractWithSigner = contractClaimitem.connect(wallet);
+        let contractAddress = this.state.geocacherAddress;
+        let geocacherContract = new ethers.Contract(contractAddress, geoCacherAbi, provider);
+        let tx = await geocacherContract.claimOwnershipOfItem(this.state.itemAddress);
         await tx.wait();
 
-        let itemsOwned = await contractWithSigner.getBagItems();
+        let itemsOwned = await geocacherContract.getBagItems();
         this.setState({itemsInBag: itemsOwned});
 
         // change item owner
@@ -92,7 +99,7 @@ class GeoCacher extends Component {
     }
 
     handleNMChange(event) {
-        this.setState({geocacherName: event.target.value});
+        this.setState({createdGeocacherName: event.target.value});
     }
 
     handleAddressChange(event) {
@@ -122,7 +129,7 @@ class GeoCacher extends Component {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Name:</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.geocacherName} onChange={this.handleNMChange} />
+                            <input className="form-control" type="text" value={this.state.createdGeocacherName} onChange={this.handleNMChange} />
                         </div>
                     </div>
                     <div className="form-group row">
@@ -131,7 +138,7 @@ class GeoCacher extends Component {
                         </div>
                     </div>
                 </form>
-                <h6>Geocacher Address: {this.state.geocacherAddress}</h6>
+                <h6>New geocacher Address: {this.state.createdGeocacherAddress}</h6>
 
                 <hr/>
 

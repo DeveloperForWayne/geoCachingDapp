@@ -44,7 +44,7 @@ class Cache extends Component {
         event.preventDefault();
         
         let factory = new ethers.ContractFactory(cacheAbi, cacheBytecode, wallet);
-        let contract = await factory.deploy(this.state.cacheCoordinates.lat, this.state.cacheCoordinates.lang,
+        let contract = await factory.deploy(this.state.cacheCoordinates.lat, this.state.cacheCoordinates.long,
             this.state.cacheName);
         
         this.setState({cacheAddress: contract.address});
@@ -104,7 +104,7 @@ class Cache extends Component {
             <div className="container border">
                 {/* <h1>Cache</h1> */}
                 <br/>
-                To create a new cache, enter it's name and exact coordinates below:
+                To create a new cache, enter it's name and coordinates below:
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group row">
                     
@@ -122,7 +122,7 @@ class Cache extends Component {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Coordinates(Longitude):</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.cacheCoordinates.long} onChange={this.handleLangChange} />
+                            <input className="form-control" type="text" value={this.state.cacheCoordinates.long} onChange={this.handleLongChange} />
                         </div>
                     </div>
                     <div className="form-group row">
