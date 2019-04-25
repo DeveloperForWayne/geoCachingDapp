@@ -12,7 +12,7 @@ const itemJson = require("../json/Item.json")
 const itemAbi = itemJson.abi;
 
 //const privateKey = process.env.PRIVATE_KEY;
-const privateKey = "0x391e818eee3d1cba9c1fffc2078302041e0d1b4ce2fdc3ee60dd420fc7c2241e";
+const privateKey = "0xba5d2a82930afbd24b81bd225a88231be220015ae0b0f8ec8ed0baba7430be11";
 
 const wallet = new ethers.Wallet(privateKey, provider);
 
@@ -21,7 +21,10 @@ class Cache extends Component {
         super(props);
         this.state = {
             cacheName: this.props.cacheName,
-            cacheCoordinates: this.props.cacheCoordinates,
+            cacheCoordinates : {
+                lat: this.props.cacheCoordinates.lat,
+                long: this.props.cacheCoordinates.long
+            },
             cacheAddress: this.props.cacheAddress,
             itemAddress: this.props.itemAddress,
             itemsInCache: this.props.itemsInCache
@@ -32,7 +35,8 @@ class Cache extends Component {
         this.setItems = this.setItems.bind(this);
 
         this.handleNMChange = this.handleNMChange.bind(this);
-        this.handleCDChange = this.handleCDChange.bind(this);
+        this.handleLatChange = this.handleLatChange.bind(this);
+        this.handleLongChange = this.handleLongChange.bind(this);
         this.handleItemChange = this.handleItemChange.bind(this);
     }
 
@@ -40,7 +44,8 @@ class Cache extends Component {
         event.preventDefault();
         
         let factory = new ethers.ContractFactory(cacheAbi, cacheBytecode, wallet);
-        let contract = await factory.deploy(this.state.cacheCoordinates, this.state.cacheName);
+        let contract = await factory.deploy(this.state.cacheCoordinates.lat, this.state.cacheCoordinates.lang,
+            this.state.cacheName);
         
         this.setState({cacheAddress: contract.address});
 
@@ -58,17 +63,17 @@ class Cache extends Component {
         event.preventDefault();
         
         // add item address to cache
-        let contractAdditem = new ethers.Contract(this.state.cacheAddress, cacheAbi, provider);
-        let contractWithSigner = contractAdditem.connect(wallet);
-        let tx = await contractWithSigner.addItem(this.state.cacheCoordinates, this.state.itemAddress);
+        let contract = new ethers.Contract(this.state.cacheAddress, cacheAbi, provider);
+        let contractWithSigner = contract.connect(wallet);
+        let tx = await contractWithSigner.addItem(this.state.itemAddress);
         await tx.wait();
 
-        let itemsAdded = await contractWithSigner.getCacheItems(this.state.cacheCoordinates);
+        let itemsAdded = await contractWithSigner.listItems(this.state.cacheCoordinates);
         this.setState({itemsInCache: itemsAdded});
 
         // change item status
-        let contractChangeStatus = new ethers.Contract(this.state.itemAddress, itemAbi, provider);
-        let contractSigner = contractChangeStatus.connect(wallet);
+        let itemContract = new ethers.Contract(this.state.itemAddress, itemAbi, provider);
+        let contractSigner = itemContract.connect(wallet);
         let txItem = await contractSigner.putItemInCache();
         await txItem.wait();
         
@@ -82,8 +87,12 @@ class Cache extends Component {
         this.setState({cacheName: event.target.value});
     }
 
-    handleCDChange(event) {
-        this.setState({cacheCoordinates: event.target.value});
+    handleLatChange(event) {
+        this.setState({cacheCoordinates : event.target.value});
+    }
+
+    handleLongChange(event) {
+        this.setState({cacheCoordinates : event.target.value});
     }
 
     handleItemChange(event) {
@@ -105,9 +114,15 @@ class Cache extends Component {
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Coordinates:</label>
+                        <label className="col-sm-2 col-form-label">Coordinates(Latitude):</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.cacheCoordinates} onChange={this.handleCDChange} />
+                            <input className="form-control" type="text" value={this.state.cacheCoordinates.lat} onChange={this.handleLatChange} />
+                        </div>
+                    </div>
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Coordinates(Longitude):</label>
+                        <div className="col-sm-3">
+                            <input className="form-control" type="text" value={this.state.cacheCoordinates.long} onChange={this.handleLangChange} />
                         </div>
                     </div>
                     <div className="form-group row">
@@ -127,9 +142,13 @@ class Cache extends Component {
                         <div className="col-sm-10">
                             <input className="form-control" type="text" value={this.state.itemAddress} onChange={this.handleItemChange} />
                         </div>
-                        <label className="col-sm-2 col-form-label">Cache coordinates:</label>
+                        <label className="col-sm-3 col-form-label">Cache coordinates(latitude):</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.itemAddress} onChange={this.handleCDChange} />
+                            <input className="form-control" type="text" onChange={this.handleLatChange} />
+                        </div>
+                        <label className="col-sm-3 col-form-label">Cache coordinates(longitude):</label>
+                        <div className="col-sm-3">
+                            <input className="form-control" type="text" onChange={this.handleLongChange} />
                         </div>
                     </div>
                     <div className="form-group row">

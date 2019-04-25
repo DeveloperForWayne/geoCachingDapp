@@ -8,7 +8,7 @@ const itemJson = require("../json/Item.json");
 const itemAbi = itemJson.abi;
 const itemBytecode = itemJson.bytecode;
 //const privateKey = process.env.PRIVATE_KEY;
-const privateKey = "0x391e818eee3d1cba9c1fffc2078302041e0d1b4ce2fdc3ee60dd420fc7c2241e";
+const privateKey = "0xba5d2a82930afbd24b81bd225a88231be220015ae0b0f8ec8ed0baba7430be11";
 
 const wallet = new ethers.Wallet(privateKey, provider);
 

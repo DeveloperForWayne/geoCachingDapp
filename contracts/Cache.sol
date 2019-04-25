@@ -3,15 +3,19 @@ pragma solidity >0.4.99 <0.6.0;
 contract Cache {
       
             string public name;
-            string public coordinates;
             address[] public items;
-            
-             mapping(address => uint) indexOfItem;
+            struct _coordinates {
+                  string lat;
+                  string long;
+            }
+            _coordinates public coordinates;
+            mapping(address => uint) indexOfItem;
+
         
 
-      constructor (string memory _coordinates, string memory _name) public {
+      constructor (string memory _lat, string memory _long , string memory _name) public {
             name = _name;
-            coordinates = _coordinates;
+            coordinates = _coordinates(_lat, _long);
       }
 
       function addItem(address _item) public {
