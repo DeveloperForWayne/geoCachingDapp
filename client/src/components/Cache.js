@@ -21,33 +21,44 @@ class Cache extends Component {
         super(props);
         this.state = {
             cacheName: this.props.cacheName,
-            cacheCoordinates : {
-                lat: this.props.cacheCoordinates.lat,
-                long: this.props.cacheCoordinates.long
-            },
+            // cacheCoordinates : {
+            //     lat: this.props.cacheCoordinates.lat,
+            //     long: this.props.cacheCoordinates.long
+            // },
+            cacheLat: this.props.cacheLat,
+            cacheLong: this.props.cacheLong,
             cacheAddress: this.props.cacheAddress,
             itemAddress: this.props.itemAddress,
-            itemsInCache: this.props.itemsInCache
+            itemsInCache: this.props.itemsInCache,
+            createdCacheName:"",
+            createdCacheLat:"",
+            createdCacheLong:"",
+            createdCacheAddress:""
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleAddItem = this.handleAddItem.bind(this);
         this.setItems = this.setItems.bind(this);
-
         this.handleNMChange = this.handleNMChange.bind(this);
+        this.handleCreatedNMChange = this.handleCreatedNMChange.bind(this);
         this.handleLatChange = this.handleLatChange.bind(this);
+        this.handleCreatedLatChange = this.handleCreatedLatChange.bind(this);
+        this.handleCreatedLongChange = this.handleCreatedLongChange.bind(this);
         this.handleLongChange = this.handleLongChange.bind(this);
         this.handleItemChange = this.handleItemChange.bind(this);
+        this.handleCacheAddressChange = this.handleCacheAddressChange.bind(this);
+
+
     }
 
     async handleSubmit(event) {
         event.preventDefault();
         
         let factory = new ethers.ContractFactory(cacheAbi, cacheBytecode, wallet);
-        let contract = await factory.deploy(this.state.cacheCoordinates.lat, this.state.cacheCoordinates.long,
+        let contract = await factory.deploy(this.state.createdCacheLat, this.state.createdCacheLong,
             this.state.cacheName);
-        
-        this.setState({cacheAddress: contract.address});
+        console.log(this.state.cacheLat);
+        this.setState({createdCacheAddress: contract.address});
 
         await contract.deployed();
         
@@ -88,11 +99,27 @@ class Cache extends Component {
     }
 
     handleLatChange(event) {
-        this.setState({cacheCoordinates : event.target.value});
+        this.setState({cacheLat : event.target.value});
     }
 
     handleLongChange(event) {
-        this.setState({cacheCoordinates : event.target.value});
+        this.setState({cacheLong : event.target.value});
+    }
+
+    handleCreatedNMChange(event) {
+        this.setState({createdCacheName: event.target.value});
+    }
+
+    handleCreatedLatChange(event) {
+        this.setState({createdCacheLat : event.target.value});
+    }
+
+    handleCreatedLongChange(event) {
+        this.setState({createdCacheLong : event.target.value});
+    }
+
+    handleCacheAddressChange(event) {
+        this.setState({cacheAddress : event.target.value});
     }
 
     handleItemChange(event) {
@@ -110,19 +137,19 @@ class Cache extends Component {
                     
                         <label className="col-sm-2 col-form-label">Name:</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.cacheName} onChange={this.handleNMChange} />
+                            <input className="form-control" type="text"  onChange={this.handlecreatedNMChange} />
                         </div>
                     </div>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Coordinates(Latitude):</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.cacheCoordinates.lat} onChange={this.handleLatChange} />
+                            <input className="form-control" type="text"  onChange={this.handleCreatedLatChange} />
                         </div>
                     </div>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Coordinates(Longitude):</label>
                         <div className="col-sm-3">
-                            <input className="form-control" type="text" value={this.state.cacheCoordinates.long} onChange={this.handleLongChange} />
+                            <input className="form-control" type="text"  onChange={this.handleCreatedLongChange} />
                         </div>
                     </div>
                     <div className="form-group row">
@@ -131,26 +158,24 @@ class Cache extends Component {
                         </div>
                     </div>
                 </form>
-                <h6>This is your new cache address: &emsp;{this.state.cacheAddress}</h6>
+                <h6>This is your new cache address: &emsp;{this.state.createdCacheAddress}</h6>
                 <button type="submit" className="btn btn-primary" onClick={this.handleClick} >Show on Map</button>
                 <hr />
 
-                To put an item in a cache, enter it's Ethereum address and cache's coordinates below:
+                To put an item in a cache, enter it's Ethereum address and cache's address below:
                 <form onSubmit={this.handleAddItem}>
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Item address:</label>
                         <div className="col-sm-10">
                             <input className="form-control" type="text" value={this.state.itemAddress} onChange={this.handleItemChange} />
                         </div>
-                        <label className="col-sm-3 col-form-label">Cache coordinates(latitude):</label>
-                        <div className="col-sm-3">
-                            <input className="form-control" type="text" onChange={this.handleLatChange} />
-                        </div>
-                        <label className="col-sm-3 col-form-label">Cache coordinates(longitude):</label>
-                        <div className="col-sm-3">
-                            <input className="form-control" type="text" onChange={this.handleLongChange} />
+                        <label className="col-sm-2 col-form-label">Cache Address:</label>
+                        <div className="col-sm-10">
+                            <input className="form-control" type="text" onChange={this.handleCacheAddressChange} />
                         </div>
                     </div>
+                    <Map/>
+                    <br/>
                     <div className="form-group row">
                         <div className="col-sm-10">
                         <button type="submit" className="btn btn-primary">Add Item</button>

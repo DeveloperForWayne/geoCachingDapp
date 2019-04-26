@@ -4,18 +4,22 @@ contract Cache {
       
             string public name;
             address[] public items;
-            struct _coordinates {
-                  string lat;
-                  string long;
-            }
-            _coordinates public coordinates;
+            // struct _coordinates {
+            //       string lat;
+            //       string long;
+            // }
+            // _coordinates public coordinates;
+            string public lat;
+            string public long;
             mapping(address => uint) indexOfItem;
 
         
 
       constructor (string memory _lat, string memory _long , string memory _name) public {
             name = _name;
-            coordinates = _coordinates(_lat, _long);
+            //coordinates = _coordinates(_lat, _long);
+            lat = _lat;
+            long = _long;
       }
 
       function addItem(address _item) public {

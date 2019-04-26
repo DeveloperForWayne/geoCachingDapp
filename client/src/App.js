@@ -14,11 +14,13 @@ class App extends Component {
     this.state= {
       itemName: "logbooks",
       itemAddress: "",
-      cacheName: "Wayne's Junkyard",
-      cacheCoordinates: {
-        lat:"34w",
-        long:"67n",
-      },
+      cacheName: "",
+      // cacheCoordinates: {
+      //   lat:"34w",
+      //   long:"67n",
+      // },
+      cacheLat : "",
+      cacheLong : "",
       cacheAddress: "",
       geocacherName: "Wayne",
       geocacherAddress: "",
@@ -47,7 +49,6 @@ class App extends Component {
             geocacherAddress={this.state.geocacherAddress}
             cacheAddress={this.state.cacheAddress}
             itemAddress={this.state.itemAddress}
-            cacheCoordinates={this.state.cacheCoordinates}
             itemsInBag={this.state.itemsInBag}
             itemsInCache={this.state.itemsInCache}
             changeItemIncache={this.setItemInCache} />
@@ -58,8 +59,10 @@ class App extends Component {
       <h1>Caches</h1>
       <Cache             
             cacheName={this.state.cacheName}
-            cacheCoordinates = {this.state.cacheCoordinates}
+            //cacheCoordinates = {this.state.cacheCoordinates}
             //cacheCoordinates.long = {this.state.cacheCoordinates.lang}
+            cacheLat={this.state.cacheLat}
+            cacheLong={this.state.cacheLong}
             cacheAddress={this.state.cacheAddress}
             itemAddress={this.state.itemAddress}
             itemsInCache={this.state.itemsInCache}
