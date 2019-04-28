@@ -6,23 +6,19 @@ import Footer from "../src/components/Footer.js"
 import Item from '../src/components/Item.js';
 import Header from '../src/components/Header.js';
 
-require('dotenv').config();
+//require('dotenv').config();
 
 class App extends Component {
   constructor(){
     super();
     this.state= {
-      itemName: "logbooks",
+      itemName: "",
       itemAddress: "",
       cacheName: "",
-      // cacheCoordinates: {
-      //   lat:"34w",
-      //   long:"67n",
-      // },
       cacheLat : "",
-      cacheLong : "",
+      cacheLng : "",
       cacheAddress: "",
-      geocacherName: "Wayne",
+      geocacherName: "",
       geocacherAddress: "",
       itemsInBag: [],
       itemsInCache: []
@@ -59,10 +55,8 @@ class App extends Component {
       <h1>Caches</h1>
       <Cache             
             cacheName={this.state.cacheName}
-            //cacheCoordinates = {this.state.cacheCoordinates}
-            //cacheCoordinates.long = {this.state.cacheCoordinates.lang}
             cacheLat={this.state.cacheLat}
-            cacheLong={this.state.cacheLong}
+            cacheLng={this.state.cacheLng}
             cacheAddress={this.state.cacheAddress}
             itemAddress={this.state.itemAddress}
             itemsInCache={this.state.itemsInCache}

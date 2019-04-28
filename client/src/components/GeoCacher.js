@@ -2,21 +2,15 @@ import React, { Component } from 'react';
 import {ethers} from "ethers";
 import '../components/GeoCacher.css'
 
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
-//const provider = ethers.getDefaultProvider('kovan');
+const provider = ethers.getDefaultProvider('ropsten');
 const GeoCacherJson = require("../json/GeoCacher.json");
 const geoCacherAbi = GeoCacherJson.abi;
 const geoCacherBytecode = GeoCacherJson.bytecode;
-
 const cacheJson = require("../json/Cache.json");
 const cacheAbi = cacheJson.abi;
-
 const itemJson = require("../json/Item.json")
 const itemAbi = itemJson.abi;
-
-//const privateKey = process.env.PRIVATE_KEY;
-const privateKey = "0xba5d2a82930afbd24b81bd225a88231be220015ae0b0f8ec8ed0baba7430be11";
-
+const privateKey = process.env.PRIVATE_KEY;
 const wallet = new ethers.Wallet(privateKey, provider);
 
 class GeoCacher extends Component {
@@ -27,21 +21,17 @@ class GeoCacher extends Component {
             geocacherAddress: this.props.geocacherAddress,
             cacheAddress: this.props.cacheAddress,
             itemAddress: this.props.itemAddress,
-            cacheCoordinates: this.props.cacheCoordinates,
             itemsInBag: this.props.itemsInBag,
             itemsInCache: this.props.itemsInCache,
             createdGeocacherAddress:"",
             createdGeocacherName:""
         };
-
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddressSubmit = this.handleAddressSubmit.bind(this);
         this.handleClaimItem = this.handleClaimItem.bind(this);
         this.handleNMChange = this.handleNMChange.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handleItemChange = this.handleItemChange.bind(this);
-        this.handleECCChange = this.handleECCChange.bind(this);
-        this.handleCADChange = this.handleCADChange.bind(this);
     }
 
     async handleSubmit(event) {
@@ -54,45 +44,36 @@ class GeoCacher extends Component {
 
     async handleAddressSubmit(event) {
         event.preventDefault();
-        //let factory = new ethers.ContractFactory(geoCacherAbi, geoCacherBytecode, wallet);
         let contractAddress = this.state.geocacherAddress;
-        //this.setState({geocacherAddress: contract.address});
-        //await contract.deployed();
         let geocacherContract = new ethers.Contract(contractAddress, geoCacherAbi, provider);
         let newGeocacherName = await geocacherContract.name();
         this.setState({geocacherName: newGeocacherName});
+        await geocacherContract.deployed();
     }
 
     async handleClaimItem(event) {
         event.preventDefault();
-        
-        // claim ownership of item
-        // let contractClaimitem = new ethers.Contract(this.state.geocacherAddress, geoCacherAbi, provider);
-        // let contractWithSigner = contractClaimitem.connect(wallet);
         let contractAddress = this.state.geocacherAddress;
         let geocacherContract = new ethers.Contract(contractAddress, geoCacherAbi, provider);
-        let tx = await geocacherContract.claimOwnershipOfItem(this.state.itemAddress);
+        let contractWithSigner = geocacherContract.connect(wallet);
+        let tx = await contractWithSigner.claimOwnershipOfItem(this.state.itemAddress);
+        console.log(tx.hash);
         await tx.wait();
-
-        let itemsOwned = await geocacherContract.getBagItems();
+        let itemsOwned = await contractWithSigner.getBagItems();
         this.setState({itemsInBag: itemsOwned});
-
         // change item owner
         let contractChangeStatus = new ethers.Contract(this.state.itemAddress, itemAbi, provider);
         let contractSigner = contractChangeStatus.connect(wallet);
         let txItem = await contractSigner.setItemOwner(this.state.geocacherAddress);
         await txItem.wait();
-
         // Remove Item From Chache
         let txItemStatus = await contractSigner.removeItemFromChache();
         await txItemStatus.wait();
-
         // remove item from cache
         let contractDelitem = new ethers.Contract(this.state.cacheAddress, cacheAbi, provider);
         let contractSignerDel = contractDelitem.connect(wallet);
         let txDel = await contractSignerDel.removeItem(this.state.cacheCoordinates, this.state.itemAddress);
         await txDel.wait();
-
         let itemsDeleted = await contractSignerDel.getCacheItems(this.state.cacheCoordinates);
         this.props.changeItemIncache(itemsDeleted);
         
@@ -108,14 +89,6 @@ class GeoCacher extends Component {
 
     handleItemChange(event) {
         this.setState({itemAddress: event.target.value});
-    }
-
-    handleECCChange(event) {
-        this.setState({cacheCoordinates: event.target.value});
-    }
-
-    handleCADChange(event) {
-        this.setState({cacheAddress: event.target.value});
     }
 
     render() {
@@ -162,18 +135,6 @@ class GeoCacher extends Component {
                 <hr/>
 
                 <form onSubmit={this.handleClaimItem}>
-                    {/* <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Cache Address:</label>
-                        <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.cacheAddress} onChange={this.handleCADChange} />
-                        </div>
-                    </div> */}
-                    {/* <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Cache Coordinates:</label>
-                        <div className="col-sm-10">
-                            <input className="form-control" type="text" value={this.state.cacheCoordinates} onChange={this.handleECCChange} />
-                        </div>
-                    </div> */}
                     <h5>Claiming an Item's Ownership:</h5>
                     <div className="form-group row">
                         

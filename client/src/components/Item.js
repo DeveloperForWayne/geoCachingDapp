@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import {ethers} from "ethers";
 import '../components/Item.css'
 
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
-//const provider = ethers.getDefaultProvider('kovan');
+const provider = ethers.getDefaultProvider('ropsten');
 const itemJson = require("../json/Item.json");
 const itemAbi = itemJson.abi;
 const itemBytecode = itemJson.bytecode;
-//const privateKey = process.env.PRIVATE_KEY;
-const privateKey = "0xba5d2a82930afbd24b81bd225a88231be220015ae0b0f8ec8ed0baba7430be11";
+const privateKey = process.env.PRIVATE_KEY;
 
 const wallet = new ethers.Wallet(privateKey, provider);
 
@@ -24,16 +22,11 @@ class Item extends Component {
     }
 
     async handleSubmit(event) {
-        event.preventDefault();
-        
+        event.preventDefault();       
         let factory = new ethers.ContractFactory(itemAbi, itemBytecode, wallet);
-
-        let contract = await factory.deploy("", this.state.itemName, wallet.address, false);
-        
+        let contract = await factory.deploy("", this.state.itemName, wallet.address, false);      
         this.setState({itemAddress: contract.address});
-
-        await contract.deployed();
-        
+        await contract.deployed();      
     }
 
     handleChange(event) {

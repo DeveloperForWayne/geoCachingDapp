@@ -8,7 +8,7 @@ class Header extends Component {
                 <h2>&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp; 
                 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
-                &nbsp; &nbsp; &nbsp;GEOCACHET</h2>
+                &nbsp; &nbsp; &nbsp;GEOCACHETH</h2>
                 
                 <h3>&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; 
