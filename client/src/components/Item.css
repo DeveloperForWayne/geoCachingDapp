@@ -1,0 +1,16 @@
+.border {
+    border: 12px solid #B22222;
+    border-radius: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    }
+
+.container {
+    background-color: rgb(216, 210, 131); 
+}
+
+h6 {
+  color: maroon;
+  
+  background-color: rgb(216, 210, 131);
+} 
